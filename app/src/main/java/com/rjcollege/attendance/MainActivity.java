@@ -11,10 +11,13 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -296,8 +299,8 @@ private ActivityMainBinding binding;
     private void askpermission() {
 
         ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
-
     }
+
 
 
     @Override
@@ -368,72 +371,79 @@ private ActivityMainBinding binding;
 
 
     public void exportdata(){
+//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                EXTERNAL_STORAGE_PERMISSION_CODE);
 
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},EXTERNAL_STORAGE_PERMISSION_CODE);
-
-        try {
-            File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(folder, "attendance.xls");
-            WritableWorkbook wb = Workbook.createWorkbook(file);
-            WritableSheet sht = wb.createSheet("data", 0);
-            Label ll = new Label(0, 0, "id");
-            Label l2 = new Label(1, 0, "name");
-            Label l3 = new Label(3, 0, "mobileNumber");
-            Label l4 = new Label(2, 0, "date");
-            Label l5 = new Label(4, 0, "checkInTime");
-            Label l6= new Label(5, 0, "checkInLocation");
-            Label l7 = new Label(6, 0, "checkInImage");
-            Label l8 = new Label(7, 0, "checkOutTime");
-            Label l9 = new Label(8, 0, "CheckOutLocation");
-            Label l10 = new Label(9, 0, "CheckOutImage");
-
-
-
-            ArrayList<Attendance> attendances = (ArrayList<Attendance>) databaseHelper.attencanceDao().getAllAttendace();
-
-            sht.addCell(ll);
-            sht.addCell(l2);
-            sht.addCell(l3);
-            sht.addCell(l4);
-            sht.addCell(l5);
-            sht.addCell(l6);
-            sht.addCell(l7);
-            sht.addCell(l8);
-            sht.addCell(l9);
-            sht.addCell(l10);
-
-            for (int i = 0; i < attendances.size(); i++) {
-                Attendance att = attendances.get(i);
-
-                    sht.addCell(new Label(0, i+1, String.valueOf(att.getId())));
-                    sht.addCell(new Label(1, i+1, att.getName()));
-                    sht.addCell(new Label(2, i+1, att.getMobileNumber()));
-                    sht.addCell(new Label(3, i+1, att.getDate()));
-                    sht.addCell(new Label(4, i+1, att.getCheckInTime()));
-                    sht.addCell(new Label(5, i+1, att.getCheckInLocation()));
-                    WritableImage img = new WritableImage(0, 0,1, 2, att.getCheckInImage());
-                    img.setColumn(6);
-                    img.setRow(i+1);
-                    sht.addImage(img);
-                    sht.addCell(new Label(7, i+1, att.getCheckOutTime()));
-                    sht.addCell(new Label(8, i+1, att.getGetCheckOutLocation()));
-                    WritableImage img2 = new WritableImage(0, 0,1, 2, att.getGetGetCheckOutImage());
-                    img2.setColumn(9);
-                    img2.setRow(i+1);
-                    sht.addImage(img2);
-
-            }
-
-            wb.write();
-            wb.close();
-            Toast.makeText(this, "Data Saved at "+file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-        }catch (Exception e){
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && false == Environment.isExternalStorageManager()) {
+            Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+            startActivity(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
         }
 
+            Toast.makeText(this, "trr", Toast.LENGTH_SHORT).show();
+            try {
+                Toast.makeText(this, "tryy", Toast.LENGTH_SHORT).show();
+                File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                File file = new File(folder, "attendance.xls");
+                WritableWorkbook wb = Workbook.createWorkbook(file);
+                WritableSheet sht = wb.createSheet("data", 0);
+                Label ll = new Label(0, 0, "id");
+                Label l2 = new Label(1, 0, "name");
+                Label l3 = new Label(3, 0, "mobileNumber");
+                Label l4 = new Label(2, 0, "date");
+                Label l5 = new Label(4, 0, "checkInTime");
+                Label l6 = new Label(5, 0, "checkInLocation");
+                Label l7 = new Label(6, 0, "checkInImage");
+                Label l8 = new Label(7, 0, "checkOutTime");
+                Label l9 = new Label(8, 0, "CheckOutLocation");
+                Label l10 = new Label(9, 0, "CheckOutImage");
+
+
+                ArrayList<Attendance> attendances = (ArrayList<Attendance>) databaseHelper.attencanceDao().getAllAttendace();
+
+                sht.addCell(ll);
+                sht.addCell(l2);
+                sht.addCell(l3);
+                sht.addCell(l4);
+                sht.addCell(l5);
+                sht.addCell(l6);
+                sht.addCell(l7);
+                sht.addCell(l8);
+                sht.addCell(l9);
+                sht.addCell(l10);
+
+                for (int i = 0; i < attendances.size(); i++) {
+                    Attendance att = attendances.get(i);
+
+                    sht.addCell(new Label(0, i + 1, String.valueOf(att.getId())));
+                    sht.addCell(new Label(1, i + 1, att.getName()));
+                    sht.addCell(new Label(2, i + 1, att.getMobileNumber()));
+                    sht.addCell(new Label(3, i + 1, att.getDate()));
+                    sht.addCell(new Label(4, i + 1, att.getCheckInTime()));
+                    sht.addCell(new Label(5, i + 1, att.getCheckInLocation()));
+                    WritableImage img = new WritableImage(0, 0, 1, 2, att.getCheckInImage());
+                    img.setColumn(6);
+                    img.setRow(i + 1);
+                    sht.addImage(img);
+                    sht.addCell(new Label(7, i + 1, att.getCheckOutTime()));
+                    sht.addCell(new Label(8, i + 1, att.getGetCheckOutLocation()));
+                    WritableImage img2 = new WritableImage(0, 0, 1, 2, att.getGetGetCheckOutImage());
+                    img2.setColumn(9);
+                    img2.setRow(i + 1);
+                    sht.addImage(img2);
+
+                }
+
+                wb.write();
+                wb.close();
+                Toast.makeText(this, "Data Saved at " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            }
+//        }else{
+//            askstoragepermission();
+//        }
 
     }
-
 
 
 }
