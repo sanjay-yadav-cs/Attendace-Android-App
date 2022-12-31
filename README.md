@@ -16,9 +16,7 @@
 <br>
 
 ## Saved data in Database
-<img src="https://user-images.githubusercontent.com/104247091/210110531-ff9338ca-e62a-4dee-9dea-b7ae2622371d.png" height=600>
-
-
+<img src="https://user-images.githubusercontent.com/104247091/210134595-ea4021f9-8faf-4503-a4ed-99501a966a20.png" height=600>
 
 
 
